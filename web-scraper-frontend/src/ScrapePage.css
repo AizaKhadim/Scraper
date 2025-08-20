@@ -1,0 +1,267 @@
+/* ==== GlobalBacklinkSheet-style CSS for your app ==== */
+
+/* Body background with subtle pattern and light blue */
+body {
+  background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/pw_maze_white.png');
+  background-color: #d0e7ff;
+  background-repeat: repeat;
+  color: #1a237e;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+}
+
+/* Main container like a card, centered */
+.app-container {
+  max-width: 750px;
+  margin: 60px auto 80px auto;
+  padding: 30px 25px;
+  background: #ffffffcc; /* semi-transparent white for slight background blend */
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgb(26 35 126 / 0.2);
+  transition: box-shadow 0.3s ease;
+  backdrop-filter: saturate(180%) blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.app-container:hover {
+  box-shadow: 0 12px 35px rgb(26 35 126 / 0.3);
+}
+
+/* Title styling */
+h1 {
+  margin-bottom: 0;
+  text-align: center;
+  color: #0d47a1;
+  font-weight: 700;
+  letter-spacing: 1.1px;
+}
+
+/* Search card styling (like tabs/filter bar) */
+.search-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  padding: 20px 25px;
+  border-radius: 25px;
+  background: #f0f7ff;
+  box-shadow: 0 5px 15px rgb(21 101 192 / 0.2);
+  border: 1px solid #ddd;
+}
+
+/* Input */
+input.keyword-input {
+  flex-grow: 1;
+  min-width: 260px;
+  padding: 14px 18px;
+  font-size: 17px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  color: #0d47a1;
+  background-color: #f3f9ff;
+}
+
+input.keyword-input::placeholder {
+  color: #90caf9;
+  font-style: italic;
+}
+
+input.keyword-input:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 10px #1976d2aa;
+  background-color: #e3f2fd;
+}
+
+/* Buttons */
+button.scrape-button, button.export-button , button.nav-button, button.remove-dup-button {
+
+  min-width: 120px;
+  padding: 14px 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgb(25 118 210 / 0.4);
+  transition: background-color 0.3s, box-shadow 0.3s;
+  color: white;
+  border: 1px solid transparent;
+}
+
+button.scrape-button , button.nav-button  , button.remove-dup-button{
+  background-color: #1976d2;
+  border-color: #1976d2;
+}
+
+button.scrape-button:hover:not(:disabled) {
+  background-color: #1565c0;
+  box-shadow: 0 6px 18px rgb(21 101 192 / 0.6);
+  border-color: #1565c0;
+}
+
+button.scrape-button:disabled {
+  background-color: #90a4ae;
+  cursor: not-allowed;
+  box-shadow: none;
+  border-color: #90a4ae;
+}
+
+button.export-button {
+  background-color: #1976d2;
+  border-color: #1976d2;
+}
+
+button.export-button:hover {
+  background-color: #50388e;
+  box-shadow: 0 6px 18px rgba(60, 32, 121, 0.6);
+  border-color: #50388e;
+}
+
+/* Error message */
+.error-message {
+  color: #d32f2f;
+  font-weight: 700;
+  margin-top: 14px;
+  font-size: 14.5px;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+/* Results container styled like a card */
+.results-container {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgb(26 35 126 / 0.15);
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+}
+
+/* Results table */
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  color: #0d47a1;
+}
+
+.results-table thead {
+  background-color: #f5f5f5;
+}
+
+.results-table th,
+.results-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+  text-align: left;
+  font-size: 14px;
+}
+
+.results-table th:last-child,
+.results-table td:last-child {
+  border-right: none;
+}
+
+.results-table th {
+  font-weight: 600;
+  letter-spacing: 0.8px;
+}
+
+.results-table tbody tr:hover {
+  background-color: #e3f2fd;
+  cursor: pointer;
+}
+/* Dropdown (Engine Select) */
+select.engine-select , select.country-select{
+  min-width: 160px;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  background-color: #f3f9ff;
+  color: #0d47a1;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(25, 118, 210, 0.2);
+  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+  appearance: none; /* hides default arrow (chrome/safari) */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D'292'%20height%3D'292'%20xmlns%3D'http://www.w3.org/2000/svg'%3E%3Cpath%20d%3D'M287%2069a17%2017%200%200%200-24%200L146%20186%2029%2069a17%2017%200%200%200-24%2024l128%20128c7%207%2017%207%2024%200l128-128a17%2017%200%200%200%200-24z'%20fill%3D'%231976d2'%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+}
+.progress-container {
+  width: 100%;
+  background: #eee;
+  border-radius: 10px;
+  margin: 15px 0;
+  height: 25px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(to right, #1976d2, #1976d2aa);
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  line-height: 25px;
+  transition: width 0.3s ease;
+}
+
+select.engine-select:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 10px #1976d2aa;
+  background-color: #e3f2fd;
+}
+
+select.engine-select:hover {
+  background-color: #eaf4ff;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app-container {
+    margin: 20px 15px 40px 15px;
+    padding: 20px 15px;
+  }
+
+  .search-card {
+    flex-direction: column;
+    align-items: stretch;
+
+  }
+
+  input.keyword-input {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  button.scrape-button, button.export-button, button.remove-dup-button {
+    width: 100%;
+    margin-left: 0 !important;
+    margin-top: 10px;
+  }
+
+  .results-container {
+    max-height: 300px;
+  }
+
+  .results-table th,
+  .results-table td {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
