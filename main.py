@@ -11,13 +11,18 @@ from sse_starlette.sse import EventSourceResponse
 from bs4 import BeautifulSoup
 import firebase_admin
 from firebase_admin import credentials, firestore
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 
 app = FastAPI()
+origins = [
+    "https://scraper-rouge.vercel.app/",  # replace with your frontend URL
+    "http://localhost:3000"
+]
 
 # CORS
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=origins,
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
@@ -51,6 +56,7 @@ def crawl_and_extract_emails(start_url, max_pages=20):
     collected_emails = set()
 
     domain = urlparse(start_url).netloc.replace("www.", "").lower()
+    contact_links = []
 
     while to_visit and len(visited) < max_pages:
         url = to_visit.pop(0)
@@ -74,10 +80,27 @@ def crawl_and_extract_emails(start_url, max_pages=20):
                 link = urljoin(url, a["href"])
                 link_domain = urlparse(link).netloc.replace("www.", "").lower()
                 if domain in link_domain and link not in visited:
-                    to_visit.append(link)
+                    # agar contact/about/support hai to priority me rakho
+                    if any(k in link.lower() for k in ["contact", "about", "support", "help"]):
+                        contact_links.append(link)
+                    else:
+                        to_visit.append(link)
 
         except Exception:
             continue
+
+    # ab priority links pe crawl karo (contact/about)
+    for link in contact_links:
+        try:
+            resp = requests.get(link, headers=HEADERS, timeout=10)
+            if resp.status_code == 200:
+                found_emails = email_regex.findall(resp.text)
+                filtered = filter_emails(found_emails, start_url)
+                collected_emails.update(filtered)
+        except Exception:
+            continue
+
+    return list(collected_emails)
 
     return list(collected_emails)
 
@@ -311,20 +334,27 @@ async def scrape_stream(request: Request, query: str, engine: str = "both", coun
                 unique_results.append(r)
                 seen_urls.add(r["url"])
 
+        # Firestore duplicate check
+        existing_urls = set(doc.to_dict().get("url") for doc in db.collection("scraped_results").stream())
+        fresh_results = [item for item in unique_results if item["url"] not in existing_urls]
+
         # Email extraction with progress
         final_results = []
-        for idx, item in enumerate(unique_results):
+        for idx, item in enumerate(fresh_results):  # note: fresh_results instead of unique_results
             if await request.is_disconnected(): break
             emails = []
             try:
                 page_resp = requests.get(item["url"], headers=HEADERS, timeout=10)
                 if page_resp.status_code == 200:
                     emails = crawl_and_extract_emails(item["url"], max_pages=20)
-
             except Exception:
                 pass
             final_results.append({"title": item["title"], "url": item["url"], "emails": emails})
-            yield {"event": "progress", "data": str(int(((idx + 1) / len(unique_results)) * 100))}
+            yield {"event": "progress", "data": str(int(((idx + 1) / len(fresh_results)) * 100))}
+
+        # --- Save to Firestore ---
+        if final_results:
+            save_results_to_firestore(final_results, query)
 
         yield {"event": "done", "data": json.dumps({
             "results": final_results,
