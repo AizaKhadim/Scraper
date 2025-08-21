@@ -61,8 +61,9 @@ function ScrapePage() {
   if (!keyword.trim()) { setError("Please enter a keyword"); return; }
   setError(""); setResults([]); setProgress(0); setLoading(true);
 
-  const url = `http://127.0.0.1:8000/scrape_stream?query=${keyword}&engine=${engine}&country=${country}`;
+  const url = `https://email-scraper-backend-production.up.railway.app/scrape_stream?query=${keyword}&engine=${engine}&country=${country}`;
   const eventSource = new EventSource(url);
+
 
   eventSource.addEventListener("progress", (e) => setProgress(parseInt(e.data)));
 
