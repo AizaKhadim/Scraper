@@ -29,7 +29,7 @@ function ScrapePage() {
     setProgress(0);
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/scrape", { 
+      const res = await axios.post("email-scraper-backend-production.up.railway.app", { 
         query: keyword,
         engine: engine,
         country: country
